@@ -8,6 +8,7 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 import json
+import subprocess
 try:
     import argparse
     flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
@@ -49,10 +50,13 @@ def get_credentials():
 
 class Gmail:
     def __init__(self):
+        
+        # Initializaation of the gmail api
         credentials = get_credentials()
         self.http = credentials.authorize(httplib2.Http())
         # Creo el servicio a usar, en este caso gmail
         self.service = discovery.build('gmail', 'v1', http=self.http)
+        # Inicializaciones propias de la clase
         self.newMails = []
         self.oldMails = loadFile()
         
@@ -71,9 +75,27 @@ class Gmail:
             #messages.extend(response['messages'])
             for m in response['messages']:
                 self.newMails.append(m['id'])
+    def mailbymail(self, listIDS):
+        listMails = []
+        for m in listIDS:
+            #ipdb.set_trace()
+            response = self.service.users().messages().get(userId='me', id=m, fields="payload/headers").execute()
+            dictEmail = {}
+            for e in response['payload']['headers']:
+                if e['name'] == 'Date':
+                    dictEmail['date'] = e['value']
+                elif e['name'] == 'From':
+                    dictEmail['from'] = e['value']
+                elif e['name'] == 'Subject':
+                    dictEmail['subject'] = e['value']
+            listMails.append(dictEmail)
+        return listMails
+                
+        
     def compareMsgs(self):
         """ Verify the oldMails with the newMails, and return only the unique element. """
-        temp3 = [x for x in self.oldMails if x not in self.newMails]
+        #temp3 = [x for x in self.oldMails if x not in self.newMails]
+        temp3 = [x for x in self.newMails if x not in self.oldMails]
         return temp3 
     def saveNew(self):
         saveFile(self.newMails, pathSTR="lastids.txt")
@@ -95,7 +117,14 @@ def saveFile(savedata, pathSTR="newids.txt"):
         for x in savedata:
             filewrite.write(x+"\n")
         #filewrite(savedata)
-        
+def sendNotifications(allData):
+    cmd = "notify-send"
+    for d in allData:
+        strMsg = "\"" + "F: " + d['from'] + "\n" + "S: " + d['subject'] + "\""
+        command = cmd + " " + strMsg
+        # Not take params
+        #subprocess.Popen([cmd, "-u normal", strMsg], stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
+        subprocess.Popen([command], shell=True)
     
 if __name__ == "__main__":
     listaMails = Gmail()
@@ -105,8 +134,11 @@ if __name__ == "__main__":
     if newElements:
         # Save the new list of messages
         listaMails.saveNew() 
-        ipdb.set_trace()
-        # get the new data
+        allData=listaMails.mailbymail(newElements)
+        #ipdb.set_trace()
+        sendNotifications(allData)
+              
+        #get the new data
     #    newMails = Gmail()
         
         
