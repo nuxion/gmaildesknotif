@@ -72,9 +72,10 @@ class Gmail:
             for m in response['messages']:
                 self.newMails.append(m['id'])
     def compareMsgs(self):
+        """ Verify the oldMails with the newMails, and return only the unique element. """
         temp3 = [x for x in self.oldMails if x not in self.newMails]
-        print (temp3)
-    def save(self):
+        return temp3 
+    def saveNew(self):
         saveFile(self.newMails, pathSTR="lastids.txt")
         
         
@@ -99,7 +100,16 @@ def saveFile(savedata, pathSTR="newids.txt"):
 if __name__ == "__main__":
     listaMails = Gmail()
     listaMails.listMails()
-    listaMails.compareMsgs()
-    listaMails.save() 
+    newElements = listaMails.compareMsgs()
+    # if i have new mails then
+    if newElements:
+        # Save the new list of messages
+        listaMails.saveNew() 
+        ipdb.set_trace()
+        # get the new data
+    #    newMails = Gmail()
+        
+        
+    
     
     #listaMails.saveNewMsgs()
