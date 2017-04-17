@@ -72,9 +72,10 @@ def listMails():
     # Creo el servicio a usar, en este caso gmail
     service = discovery.build('gmail', 'v1', http=http)
     # Hago la llamada especifica al api:
+    #response = service.users().messages().list(userId='me', labelIds='INBOX', maxResults=10).execute()
     response = service.users().messages().list(userId='me', labelIds='INBOX', maxResults=10).execute()
     print (response)
-    # Obtengo una lista de Ids y ThreadsId
+    # Obtengo una lista de Ids y ThreadsIdINBOX
     # En response que es un json, existe el vector 'messages'
     messages = []
     if 'messages' in response:
