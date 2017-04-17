@@ -118,7 +118,7 @@ def saveFile(savedata, pathSTR="newids.txt"):
             filewrite.write(x+"\n")
         #filewrite(savedata)
 def sendNotifications(allData):
-    cmd = "notify-send"
+    cmd = "notify-send -u critical"
     for d in allData:
         strMsg = "\"" + "F: " + d['from'] + "\n" + "S: " + d['subject'] + "\""
         command = cmd + " " + strMsg
