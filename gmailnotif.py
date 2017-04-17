@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
 from __future__ import print_function
 import ipdb
 import httplib2
 import os
+import time
 
 from apiclient import discovery
 from oauth2client import client
@@ -118,30 +120,28 @@ def saveFile(savedata, pathSTR="newids.txt"):
             filewrite.write(x+"\n")
         #filewrite(savedata)
 def sendNotifications(allData):
-    cmd = "notify-send -u critical"
+    #cmd = "/home/nuxion/scripts/notify.sh"
+    cmd = "/usr/bin/notify-send -u critical"
     for d in allData:
-        strMsg = "\"" + "F: " + d['from'] + "\n" + "S: " + d['subject'] + "\""
+        strMsg = "\"" + "F:" + d['from'] + "\n" + "S:" + d['subject'] + "\""
         command = cmd + " " + strMsg
         # Not take params
         #subprocess.Popen([cmd, "-u normal", strMsg], stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
         subprocess.Popen([command], shell=True)
     
 if __name__ == "__main__":
-    listaMails = Gmail()
-    listaMails.listMails()
-    newElements = listaMails.compareMsgs()
-    # if i have new mails then
-    if newElements:
-        # Save the new list of messages
-        listaMails.saveNew() 
-        allData=listaMails.mailbymail(newElements)
-        #ipdb.set_trace()
-        sendNotifications(allData)
+    while True:
+        listaMails = Gmail()
+        listaMails.listMails()
+        newElements = listaMails.compareMsgs()
+        # if i have new mails then
+        if newElements:
+            # Save the new list of messages
+            listaMails.saveNew() 
+            allData=listaMails.mailbymail(newElements)
+            #ipdb.set_trace()
+            sendNotifications(allData) 
+        time.sleep(30)
+        
               
-        #get the new data
-    #    newMails = Gmail()
         
-        
-    
-    
-    #listaMails.saveNewMsgs()
