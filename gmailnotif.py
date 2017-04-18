@@ -22,6 +22,7 @@ except ImportError:
 SCOPES = 'https://www.googleapis.com/auth/gmail.readonly'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Gmail API Python Quickstart'
+@profile
 def get_credentials():
     """Gets valid user credentials from storage.
 
@@ -51,6 +52,7 @@ def get_credentials():
     return credentials
 
 class Gmail:
+    @profile
     def __init__(self):
         
         # Initializaation of the gmail api
@@ -61,7 +63,7 @@ class Gmail:
         # Inicializaciones propias de la clase
         self.newMails = []
         self.oldMails = loadFile()
-        
+    @profile    
     def listMails(self, maxResults=10):
         """ Atraves del api de google obtengo los 10 ultimos mensajes 
         del INBOX. 
@@ -77,6 +79,7 @@ class Gmail:
             #messages.extend(response['messages'])
             for m in response['messages']:
                 self.newMails.append(m['id'])
+    @profile
     def mailbymail(self, listIDS):
         listMails = []
         for m in listIDS:
@@ -93,12 +96,13 @@ class Gmail:
             listMails.append(dictEmail)
         return listMails
                 
-        
+    @profile    
     def compareMsgs(self):
         """ Verify the oldMails with the newMails, and return only the unique element. """
         #temp3 = [x for x in self.oldMails if x not in self.newMails]
         temp3 = [x for x in self.newMails if x not in self.oldMails]
         return temp3 
+    @profile
     def saveNew(self):
         saveFile(self.newMails, pathSTR="lastids.txt")
         
@@ -141,7 +145,10 @@ if __name__ == "__main__":
             allData=listaMails.mailbymail(newElements)
             #ipdb.set_trace()
             sendNotifications(allData) 
+        #del listaMails
+        #del newElements
         time.sleep(30)
+        
         
               
         
