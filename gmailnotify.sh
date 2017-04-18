@@ -1,13 +1,13 @@
 #!/bin/bash
 export DISPLAY=:0
-BASEDIR="/home/nuxion/Projects/gmail/gmail" 
+BASEDIR="/home/nuxion/scripts/gmaildesknotif"
 MAILDIR=$BASEDIR"/mails/"
 
 var=$1
 notify="/usr/bin/notify-send"
 PYTH="/usr/bin/python3"
-
-function check_ok (){
+# check_ok() 
+# Chequeo todas las condiciones
 	
 	if [ ! -f $BASEDIR/lastids.txt ]; then
 		echo "123456" > $BASEDIR/lastids.txt
@@ -15,15 +15,13 @@ function check_ok (){
 		cd $BASEDIR && $PYTH main.py
 	fi
 	if [ $# -eq 0 ]; then
-		var="S"
+		var=0
 	fi
-}
 
 ### MAIN ### 
-# Chequeo todas las condiciones
-check_ok
 if [ "$(ls -A $MAILDIR)" ]; then
-	if [ $var=="F" ];then
+	
+	if [ $var -eq 1 ];then
 		$notify -u critical "Gmail Notification v0.02" "$( cat $MAILDIR/mail.txt)"
 	else
 		for x in `ls $MAILDIR | grep -v mail.txt`
@@ -31,7 +29,7 @@ if [ "$(ls -A $MAILDIR)" ]; then
 			$notify -u critical "Gmail Notification v0.02" "$(cat $MAILDIR$x)"
 		done
 	fi
-	rm $MAILDIR/*.txt
+	#rm $MAILDIR/*.txt
 else 
 	echo "No hay mails nuevos"
 fi
