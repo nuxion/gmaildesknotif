@@ -12,7 +12,7 @@ function check_ok (){
 	if [ ! -f $BASEDIR/lastids.txt ]; then
 		echo "123456" > $BASEDIR/lastids.txt
 	else
-		$PYTH $BASEDIR/main.py
+		cd $BASEDIR && $PYTH main.py
 	fi
 	if [ $# -eq 0 ]; then
 		var="S"
