@@ -9,6 +9,7 @@ from oauth2client.file import Storage
 import json
 try:
     import argparse
+    print ("here2")
     flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
 except ImportError:
     flags = None
@@ -55,7 +56,8 @@ def main():
     of the user's Gmail account.
     """
     credentials = get_credentials()
-    http = credentials.authorize(httplib2.Http())
+    pi = httplib2.proxy_info_from_url('http://localhost:8080')
+    http = credentials.authorize(httplib2.Http(proxy_info=pi))
     service = discovery.build('gmail', 'v1', http=http)
 
     #results = service.users().messages.list(userId='me').execute()

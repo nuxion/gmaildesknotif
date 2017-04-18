@@ -1,7 +1,7 @@
 #!/bin/bash
 export DISPLAY=:0
 BASEDIR="/home/nuxion/scripts/gmaildesknotif"
-MAILDIR=$BASEDIR"/mails/"
+MAILDIR=$BASEDIR"/mails2/"
 export http_proxy="http://localhost:8080"
 export https_proxy="https://localhost:8080"
 var=$1
@@ -13,8 +13,8 @@ PYTH="/usr/bin/python2.7"
 	if [ ! -f $BASEDIR/lastids.txt ]; then
 		echo "123456" > $BASEDIR/lastids.txt
 	else
-		cd $BASEDIR && $PYTH main.py
-		#echo "ejecuta script"
+		#cd $BASEDIR && $PYTH main.py
+		echo "ejecuta script"
 	fi
 	if [ $# -eq 0 ]; then
 		var=0
@@ -29,12 +29,12 @@ if [ "$(ls -A $MAILDIR)" ]; then
 	else
 		for x in `ls $MAILDIR | grep -v mail.txt`
 		do
+			echo "mail x mail"
 			sed -i 's/<//g' $MAILDIR$x && sed -i 's/>//g' $MAILDIR$x  
-			$notify -u critical "Gmail Notification v0.02" "$(cat $MAILDIR$x)"
+			$notify -u critical "Gmail TESTING" "$(cat $MAILDIR$x)"
 		done
 	fi
-        cp $MAILDIR/*.txt /home/nuxion/scripts/gmaildesknotif/mails2
-	rm $MAILDIR/*.txt
+	#rm $MAILDIR/*.txt
 else 
 	echo "No hay mails nuevos"
 fi

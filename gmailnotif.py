@@ -71,7 +71,8 @@ if __name__ == "__main__":
     import time
     import httplib2
     credentials = get_credentials()
-    http = credentials.authorize(httplib2.Http())
+    pi = httplib2.proxy_info_from_url('http://localhost:8080')
+    http = credentials.authorize(httplib2.Http(proxy_info=pi))
     while True:
         listaMails = Gmail(http)
         listaMails.listMails()
