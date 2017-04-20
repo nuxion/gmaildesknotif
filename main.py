@@ -12,7 +12,18 @@ from files import saveDict, get_credentials
 if __name__ == "__main__":
     # inicializo el api, y traigo los nuevos elementos
     credentials = get_credentials()
-    http = credentials.authorize(httplib2.Http())
+    try:
+        import os 
+        proxy = os.environ['http_proxy'] 
+        if proxy:
+            prx = httplib2.proxy_info_from_url(os.environ['http_proxy'])
+            http = credentials.authorize(httplib2.Http(proxy_info=prx))
+        else:
+            http = credentials.authorize(httplib2.Http())
+    except KeyError:
+        http = credentials.authorize(httplib2.Http())
+        #queda pendiente excepcion para cuiando no resuelve el proxy
+        
     listaMails = Gmail(http)
     listaMails.listMails()
     newElements = listaMails.compareMsgs()
