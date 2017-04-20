@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
-#from __future__ import print_function
-#import ipdb
 from apiclient import discovery
-#from oauth2client import client
-#from oauth2client import tools
-#from oauth2client.file import Storage
-import subprocess
 from files import loadFile, saveFile, get_credentials
 
 class Gmail:
@@ -58,7 +52,10 @@ class Gmail:
         saveFile(self.newMails, pathSTR="lastids.txt")
         
 def sendNotifications(allData):
-    #cmd = "/home/nuxion/scripts/notify.sh"
+    """ Method to send notifications from the python process itself,
+    DEPRECATED. """
+
+    import subprocess 
     cmd = "/usr/bin/notify-send -u critical"
     for d in allData:
         strMsg = "\"" + "F:" + d['from'] + "\n" + "S:" + d['subject'] + "\""
@@ -66,6 +63,7 @@ def sendNotifications(allData):
         # Not take params
         #subprocess.Popen([cmd, "-u normal", strMsg], stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
         subprocess.Popen([command], shell=True)
+   
     
 if __name__ == "__main__":
     import time

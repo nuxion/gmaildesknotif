@@ -42,8 +42,8 @@ else
     #cd $BASEDIR && $PYTH main.py
     # posible bug, si o si debe recibir una variable, 
     # por mas que este vacia
-    cd $BASEDIR && env http_proxy=$http_proxy $PYTH envitest.py
-    echo "ejecuta script"
+    cd $BASEDIR && env http_proxy=$http_proxy $PYTH main.py
+    #echo "ejecuta script"
 fi
 
 # Una vez ejecutado el script, 
@@ -69,7 +69,7 @@ if [ "$(ls -A $MAILDIR)" ]; then
     #cp $MAILDIR/*.txt /home/nuxion/scripts/gmaildesknotif/mails2
     # borro los mails, ya que funcionan como flag para detectar si
     # es necesario enviar las notifs
-	#rm $MAILDIR/*.txt
+	rm $MAILDIR/*.txt
 else 
     # for debug purposes
 	echo "No hay mails nuevos"
