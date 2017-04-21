@@ -60,7 +60,9 @@ def saveDict(saveDict, pathSTR="mails/"):
     listToMail = []
     i = 0
     for mail in saveDict:
-        strMail = mail['from'] + "\n" + mail['subject']
+        txt = mail['from'] + "\n" + mail['subject']
+	# bug : UnicodeEncodeError: 'ascii' codec can't encode character u'\xf3'
+	strMail = txt.encode('utf-8')
         listToMail.append(strMail) 
         listToMail.append("----------")
         with open (pathSTR + str(i) + ".txt", "w") as filemail:
